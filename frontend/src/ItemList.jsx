@@ -8,7 +8,7 @@ import LoadMoreTrigger from "./LoadMoreTrigger";
 import { useCallback, useEffect, useState } from "react";
 import SortableItem from "./SortableItem";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://212.109.223.30:8880";
 const USER_ID = "test-user";
 
 export const ItemList = ({ search, setTotal }) => {

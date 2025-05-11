@@ -6,10 +6,20 @@
   margin-right: auto;
 }
 
+.inputContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inputContainer button {
+  height: 38px;
+}
+
 .search {
   width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
   font-size: 1rem;
 }
 
