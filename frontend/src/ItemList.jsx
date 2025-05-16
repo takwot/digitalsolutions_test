@@ -1,4 +1,11 @@
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  TouchSensor,
+  MouseSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -76,6 +83,16 @@ export const ItemList = ({ search, setTotal }) => {
     [offset, search, isLoading]
   );
 
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
+
   useEffect(() => {
     setOffset(0);
     fetchData(true);
@@ -83,7 +100,11 @@ export const ItemList = ({ search, setTotal }) => {
 
   return (
     <div className="list">
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
           {items.map((id) => (
             <SortableItem
