@@ -14,6 +14,10 @@ import {
 import LoadMoreTrigger from "./LoadMoreTrigger";
 import { useCallback, useEffect, useState } from "react";
 import SortableItem from "./SortableItem";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 
 const API_URL = "http://212.109.223.30:8880";
 const USER_ID = "test-user";
@@ -104,6 +108,7 @@ export const ItemList = ({ search, setTotal }) => {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       >
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
           {items.map((id) => (
