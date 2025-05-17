@@ -43,13 +43,16 @@ app.post("/order", (req, res) => {
     return res.status(400).json({ error: "Invalid request" });
   }
 
-  if (!userState[userId]) userState[userId] = { selected: [], order: [] };
+  if (!userState[userId]) {
+    userState[userId] = { selected: [], order: [] };
+  }
+
   const oldOrder = userState[userId].order;
 
-  const newSet = new Set(newPartialOrder);
-  const cleanedOldOrder = oldOrder.filter((id) => !newSet.has(id));
+  const updatedSet = new Set(newPartialOrder);
+  const remaining = oldOrder.filter((id) => !updatedSet.has(id));
 
-  userState[userId].order = [...newPartialOrder, ...cleanedOldOrder];
+  userState[userId].order = [...newPartialOrder, ...remaining];
 
   res.json({ status: "ok" });
 });
