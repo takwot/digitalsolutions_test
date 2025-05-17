@@ -37,15 +37,19 @@ app.get("/items", (req, res) => {
 });
 
 app.post("/order", (req, res) => {
-  const { userId, order } = req.body;
+  const { userId, order: newPartialOrder } = req.body;
 
-  if (!userId || !Array.isArray(order)) {
+  if (!userId || !Array.isArray(newPartialOrder)) {
     return res.status(400).json({ error: "Invalid request" });
   }
 
   if (!userState[userId]) userState[userId] = { selected: [], order: [] };
+  const oldOrder = userState[userId].order;
 
-  userState[userId].order = order;
+  const newSet = new Set(newPartialOrder);
+  const cleanedOldOrder = oldOrder.filter((id) => !newSet.has(id));
+
+  userState[userId].order = [...newPartialOrder, ...cleanedOldOrder];
 
   res.json({ status: "ok" });
 });
