@@ -20,7 +20,6 @@ import {
 } from "@dnd-kit/modifiers";
 
 const API_URL = "http://212.109.223.30:8880";
-const USER_ID = "test-user";
 
 export const ItemList = ({ search, setTotal }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,12 +38,13 @@ export const ItemList = ({ search, setTotal }) => {
     await fetch(`${API_URL}/select`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: USER_ID, selected: updated }),
+      body: JSON.stringify({ id }),
     });
   };
 
   const handleDragEnd = async (event) => {
     const { active, over } = event;
+
     if (!over || active.id === over.id) return;
 
     const oldIndex = items.indexOf(active.id);
@@ -52,10 +52,12 @@ export const ItemList = ({ search, setTotal }) => {
     const newItems = arrayMove(items, oldIndex, newIndex);
     setItems(newItems);
 
+    console.log(newItems);
+
     await fetch(`${API_URL}/order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: USER_ID, order: newItems }),
+      body: JSON.stringify({ items: newItems }),
     });
   };
 
@@ -66,7 +68,7 @@ export const ItemList = ({ search, setTotal }) => {
 
       const currentOffset = reset ? 0 : offset;
       const res = await fetch(
-        `${API_URL}/items?userId=${USER_ID}&search=${search}&offset=${currentOffset}&limit=${limit}`
+        `${API_URL}/items?search=${search}&offset=${currentOffset}&limit=${limit}`
       );
       const data = await res.json();
 
