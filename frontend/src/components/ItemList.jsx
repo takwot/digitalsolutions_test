@@ -19,8 +19,8 @@ import {
   restrictToParentElement,
 } from "@dnd-kit/modifiers";
 
-const API_URL = "http://localhost:8880";
-// const API_URL = "http://212.109.223.30:8880";
+// const API_URL = "http://localhost:8880";
+const API_URL = "http://212.109.223.30:8880";
 
 export const ItemList = ({ search, setTotal }) => {
   const [isLoading, setIsLoading] = useState(false);
