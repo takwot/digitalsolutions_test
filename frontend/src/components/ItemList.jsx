@@ -19,7 +19,8 @@ import {
   restrictToParentElement,
 } from "@dnd-kit/modifiers";
 
-const API_URL = "http://212.109.223.30:8880";
+const API_URL = "http://localhost:8880";
+// const API_URL = "http://212.109.223.30:8880";
 
 export const ItemList = ({ search, setTotal }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,14 +51,21 @@ export const ItemList = ({ search, setTotal }) => {
     const oldIndex = items.indexOf(active.id);
     const newIndex = items.indexOf(over.id);
     const newItems = arrayMove(items, oldIndex, newIndex);
+
     setItems(newItems);
 
-    console.log(newItems);
+    const allItemsResponse = await fetch(`${API_URL}/items?search=${search}`);
+    const { items: allFilteredItems } = await allItemsResponse.json();
+
+    const updatedOrder = [
+      ...newItems,
+      ...allFilteredItems.filter((item) => !newItems.includes(item)),
+    ];
 
     await fetch(`${API_URL}/order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: newItems }),
+      body: JSON.stringify({ items: updatedOrder, offset, search }),
     });
   };
 
@@ -86,7 +94,7 @@ export const ItemList = ({ search, setTotal }) => {
       setHasMore(data.items.length === limit);
       setIsLoading(false);
     },
-    [offset, search, isLoading]
+    [offset, search, isLoading, setTotal]
   );
 
   const sensors = useSensors(
